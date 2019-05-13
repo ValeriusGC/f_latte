@@ -19,7 +19,19 @@ class S implements WidgetsLocalizations {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  String get pushingThree => "You pressed trice";
   String get title => "F-Latte";
+  String greeting(String name) => "Hi, $name!";
+  String pushing(dynamic cnt) {
+    switch (cnt.toString()) {
+      case "1":
+        return "You pressed once";
+      case "2":
+        return "You pressed twice";
+      default:
+        return "You pressed $cnt times";
+    }
+  }
 }
 
 class $ru extends S {
@@ -30,6 +42,17 @@ class $ru extends S {
 
   @override
   String get title => "F-Латте";
+  @override
+  String greeting(String name) => "Привет, ${name}! ";
+  @override
+  String pushing(dynamic cnt) {
+    switch (cnt.toString()) {
+      case "1":
+        return "Ты нажал разок";
+      default:
+        return "Ты нажал ${cnt} раз";
+    }
+  }
 }
 
 class $en extends S {

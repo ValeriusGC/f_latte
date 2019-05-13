@@ -1,3 +1,6 @@
 {
-  "title": "F-Латте"
+  "title": "F-Латте",
+  "greeting": "Привет, ${name}! ",
+  "pushingOne": "Ты нажал разок",
+  "pushingOther": "Ты нажал ${cnt} раз",
 }
