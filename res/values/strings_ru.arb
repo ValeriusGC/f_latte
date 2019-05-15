@@ -1,6 +1,8 @@
 {
   "title": "F-Латте",
-  "greeting": "Привет, ${name}! ",
-  "pushingOne": "Ты нажал разок",
-  "pushingOther": "Ты нажал ${cnt} раз",
+  "greeting": "Привет, ${name}!",
+  "pushingZero": "Ничего не нажималось",
+  "pushingOne": "Нажато разок",
+  "pushingTwo": "Нажато дважды",
+  "pushingOther": "Нажато $cnt раз(а)"
 }

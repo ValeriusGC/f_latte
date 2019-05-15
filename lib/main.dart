@@ -55,9 +55,6 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-
-    final v = GlobalObjectKey(MyApp);
-
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
@@ -78,8 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
+        // localized title
         title: Text(S.of(context).title),
       ),
       body: Center(
@@ -102,11 +98,13 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // localized widget
             Text(
-              'You have pushed the button this many times:',
+              S.of(context).greeting('User'),
             ),
+            // localized widget
             Text(
-              '$_counter',
+              S.of(context).pushing(_counter),
               style: Theme.of(context).textTheme.display1,
             ),
           ],
