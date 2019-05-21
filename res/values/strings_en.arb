@@ -1,8 +1,10 @@
 {
   "title": "F-Latte",
   "greeting": "Hi, $name!",
-  "pushingZero": "You pressed NONE (",
+  "pushingZero": "You not pressed",
   "pushingOne": "You pressed once",
   "pushingTwo": "You pressed twice",
   "pushingOther": "You pressed $cnt times",
+  "pushingFew": "You pressed few times",
+  "pushingMany": "You pressed many times",
 }

@@ -53,6 +53,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  dynamic parameter;
+
+
+  @override
+  void initState() {
+    parameter = _counter;
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -62,6 +69,17 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+
+      if (_counter > 5) {
+        if (_counter > 7) {
+          parameter = 'many';
+        } else {
+          parameter = 'few';
+        }
+      } else {
+        parameter = _counter;
+      }
+
     });
   }
 
@@ -104,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             // localized widget
             Text(
-              S.of(context).pushing(_counter),
+              "${S.of(context).pushing(parameter)} : ($_counter)",
               style: Theme.of(context).textTheme.display1,
             ),
           ],

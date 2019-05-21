@@ -4,5 +4,7 @@
   "pushingZero": "Ничего не нажималось",
   "pushingOne": "Нажато разок",
   "pushingTwo": "Нажато дважды",
-  "pushingOther": "Нажато $cnt раз(а)"
+  "pushingOther": "Нажато $cnt раз(а)",
+  "pushingFew": "Нажато несколько раз",
+  "pushingMany": "Нажато много раз"
 }
