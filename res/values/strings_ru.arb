@@ -4,5 +4,7 @@
   "pushingZero": "Ничего не нажималось",
   "pushingOne": "Нажато разок",
   "pushingTwo": "Нажато дважды",
-  "pushingOther": "Нажато $cnt раз(а)"
+  "pushingOther": "Нажато $cnt раз(а)",
+  "emptyField": "поле внизу пустое",
+  "editHint": "Печатайте и смотрите заголовок"
 }

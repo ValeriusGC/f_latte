@@ -1,3 +1,4 @@
+import 'package:f_latte/service_locator.dart';
 import 'package:f_latte/text_manager.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,12 +7,14 @@ import 'package:flutter/material.dart';
 
 import 'appbar.dart';
 
-// In this manner we create singleton (because of constant nature of [TextManager])
-final mgr = TextManager();
 
-void main() => runApp(MyApp());
+void main() {
+  setUpServiceLocator();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -42,6 +45,9 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+
+  final _mgr = sl<TextManager>();
+
   MyHomePage({Key key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -113,6 +119,18 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               S.of(context).pushing(_counter),
               style: Theme.of(context).textTheme.display1,
+            ),
+            Container(
+              padding: EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: S.of(context).editHint,
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (v) {
+                  widget._mgr.txtCmd.execute(v);
+                },
+              ),
             ),
           ],
         ),
