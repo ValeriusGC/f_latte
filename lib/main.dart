@@ -1,11 +1,20 @@
+import 'package:f_latte/service_locator.dart';
+import 'package:f_latte/text_manager.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:f_latte/generated/i18n.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+import 'appbar.dart';
+
+
+void main() {
+  setUpServiceLocator();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -36,6 +45,9 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+
+  final _mgr = sl<TextManager>();
+
   MyHomePage({Key key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -94,7 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         // localized title
-        title: Text(S.of(context).title),
+        //title: Text(S.of(context).title),
+        title: AppBarWidget(),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -124,6 +137,18 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               "${S.of(context).pushing(parameter)} : ($_counter)",
               style: Theme.of(context).textTheme.display1,
+            ),
+            Container(
+              padding: EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: S.of(context).editHint,
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (v) {
+                  widget._mgr.txtCmd.execute(v);
+                },
+              ),
             ),
           ],
         ),

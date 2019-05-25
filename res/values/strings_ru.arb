@@ -6,5 +6,7 @@
   "pushingTwo": "Нажато дважды",
   "pushingOther": "Нажато $cnt раз(а)",
   "pushingFew": "Нажато несколько раз",
-  "pushingMany": "Нажато много раз"
+  "pushingMany": "Нажато много раз",
+  "emptyField": "поле внизу пустое",
+  "editHint": "Печатайте и смотрите заголовок"
 }

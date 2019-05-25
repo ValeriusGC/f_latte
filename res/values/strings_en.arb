@@ -7,4 +7,6 @@
   "pushingOther": "You pressed $cnt times",
   "pushingFew": "You pressed few times",
   "pushingMany": "You pressed many times",
+  "emptyField": "field below is empty",
+  "editHint": "Do typing and observe title",
 }
