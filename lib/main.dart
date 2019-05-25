@@ -1,7 +1,13 @@
+import 'package:f_latte/text_manager.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:f_latte/generated/i18n.dart';
 import 'package:flutter/material.dart';
+
+import 'appbar.dart';
+
+// In this manner we create singleton (because of constant nature of [TextManager])
+final mgr = TextManager();
 
 void main() => runApp(MyApp());
 
@@ -76,7 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         // localized title
-        title: Text(S.of(context).title),
+        //title: Text(S.of(context).title),
+        title: AppBarWidget(),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it

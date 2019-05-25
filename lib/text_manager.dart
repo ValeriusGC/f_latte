@@ -1,0 +1,4 @@
+
+class TextManager {
+  const TextManager();
+}
