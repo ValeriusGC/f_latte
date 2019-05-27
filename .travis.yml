@@ -35,7 +35,14 @@ matrix:
     before_script:
       - git clone https://github.com/flutter/flutter.git -b stable
       - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+      - if [  ! -d "flutter" ] ; then git clone https://github.com/flutter/flutter.git -b beta; fi;
     script:
       - flutter packages get
       - flutter test
       - flutter build ios --no-codesign
+    cache:
+      cocoapods: true
+      bundler: true
+      directories:
+      - "$HOME/.pub-cache"
+      - "$HOME/flutter"
