@@ -15,6 +15,7 @@ void main() {
 
     expect(1, 1);
     expect(true, true);
+    expect(3, 3);
 
 //    // Build our app and trigger a frame.
 //    await tester.pumpWidget(MyApp());
