@@ -14,6 +14,7 @@ void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
 
     expect(1, 1);
+    expect(true, true);
 
 //    // Build our app and trigger a frame.
 //    await tester.pumpWidget(MyApp());
