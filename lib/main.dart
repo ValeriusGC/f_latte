@@ -128,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (v) {
-                  widget._mgr.txtCmd.execute(v);
+                  widget._mgr.txtCmd(v);
                 },
               ),
             ),

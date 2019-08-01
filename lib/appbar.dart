@@ -17,12 +17,12 @@ class AppBarWidget extends StatelessWidget {
       stream: _mgr.txtCmd,
       builder: (context, snapshot) {
 
-        final txt = snapshot?.data != null ? snapshot?.data : '';
+        final txt = snapshot.data ?? '';
 
-        if(txt != ''){
-          _ctrl.text = '${txt} (${txt.length})';
-        }else{
+        if(txt.isEmpty){
           _ctrl.text = S.of(context).emptyField;
+        }else{
+          _ctrl.text = '$txt (${txt.length})';
         }
 
         return Row(
