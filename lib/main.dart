@@ -1,3 +1,4 @@
+import 'package:f_latte/background.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:f_latte/generated/i18n.dart';
@@ -99,8 +100,37 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             // localized widget
-            Text(
-              S.of(context).greeting('User'),
+            Stack(
+              fit: StackFit.loose,
+              children: <Widget>[
+                Container(
+                  height: 112,
+                  margin: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                  ),
+                  child: CustomBackground(),
+                ),
+                Container(
+                  margin: EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
+                  height: 96,
+                  decoration: BoxDecoration(
+                    color: Colors.red[200],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        S.of(context).greeting('User'),
+                        style: TextStyle(
+                          fontSize: 36,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             // localized widget
             Text(
