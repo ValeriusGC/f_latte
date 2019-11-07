@@ -109,26 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   decoration: BoxDecoration(
                     color: Colors.green,
                   ),
-                  child: CustomBackground(),
-                ),
-                Container(
-                  margin: EdgeInsets.all(16),
-                  padding: EdgeInsets.all(16),
-                  height: 96,
-                  decoration: BoxDecoration(
-                    color: Colors.red[200],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        S.of(context).greeting('User'),
-                        style: TextStyle(
-                          fontSize: 36,
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: CustomBackground2(),
                 ),
               ],
             ),
