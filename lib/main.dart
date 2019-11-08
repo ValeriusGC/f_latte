@@ -1,3 +1,4 @@
+import 'package:f_latte/rxdart_page.dart';
 import 'package:f_latte/state_page.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Page with State'),
+      //home: MyHomePage(title: 'Flutter Demo Page with State'),
+      home: MyHomeRxPage(title: 'Flutter Demo Page with RxDart'),
     );
   }
 }
