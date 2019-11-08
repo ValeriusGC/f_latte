@@ -4,18 +4,32 @@ import 'package:rxdart/rxdart.dart';
 
 class _Counter {
   int _count;
+  /// Счетчик обратного отсчета
+  int _countdown = 0;
 
   int get count => _count;
 
   _Counter(this._count)
-      : this.onCounterUpd = BehaviorSubject<int>.seeded(_count);
+      : this.onCounterUpd = BehaviorSubject<int>.seeded(_count),
+        this.onCountdownUpd = BehaviorSubject<int>.seeded(0);
 
-  /// Создадим евент.
   final BehaviorSubject<int> onCounterUpd;
+
+  /// Евент обратного отсчета
+  final BehaviorSubject<int> onCountdownUpd;
 
   /// Вынесем инкремент за пределы виджета, добавим генерацию события.
   Future incrementCounter() async {
-    onCounterUpd.add(++_count);
+    if(_countdown <= 0) {
+      onCounterUpd.add(++_count);
+      /// Запуск таймера, с вочдогом и генерацией евентов.
+      _countdown = 3;
+      onCountdownUpd.add(_countdown);
+      Observable
+          .periodic(Duration(seconds: 1), (_) => --_countdown)
+          .take(3)
+          .listen((e) => onCountdownUpd.add(_countdown));
+    }
   }
 }
 
@@ -56,6 +70,15 @@ class MyHomeRxPage extends StatelessWidget {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            /// Реактивная надпись
+            StreamBuilder<int>(
+                stream: _counter.onCountdownUpd,
+                builder: (context, snapshot) {
+                  return Text(
+                    'Rest ${snapshot.data} seconds',
+                    style: Theme.of(context).textTheme.title,
+                  );
+                }),
             StreamBuilder<int>(
                 stream: _counter.onCounterUpd,
                 builder: (context, snapshot) {
@@ -78,10 +101,20 @@ class MyHomeRxPage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _counter.incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+      /// Кнопка стала реактивной
+      floatingActionButton: StreamBuilder<int>(
+        initialData: _counter.onCountdownUpd.value,
+        stream: _counter.onCountdownUpd,
+        builder: (context, snapshot) {
+          return FloatingActionButton(
+            onPressed: snapshot.data <= 0 ? _counter.incrementCounter : null,
+            tooltip: 'Increment',
+            backgroundColor: snapshot.data <= 0
+                ? Theme.of(context).primaryColor
+                : Colors.grey,
+            child: Icon(Icons.add),
+          );
+        }
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
