@@ -3,23 +3,23 @@ import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
 
 class _Counter {
-  int count;
+  int _count;
 
-  _Counter(this.count) {
-    onCounterUpd.add(count);
-  }
+  int get count => _count;
+
+  _Counter(this._count)
+      : this.onCounterUpd = BehaviorSubject<int>.seeded(_count);
 
   /// Создадим евент.
-  final onCounterUpd = BehaviorSubject<int>();
+  final BehaviorSubject<int> onCounterUpd;
 
   /// Вынесем инкремент за пределы виджета, добавим генерацию события.
   Future incrementCounter() async {
-    onCounterUpd.add(++count);
+    onCounterUpd.add(++_count);
   }
-
 }
 
-final _counter = _Counter(10);
+final _counter = _Counter(5);
 
 ///
 class MyHomeRxPage extends StatelessWidget {
@@ -30,7 +30,6 @@ class MyHomeRxPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -58,7 +57,6 @@ class MyHomeRxPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             StreamBuilder<int>(
-                initialData: _counter.onCounterUpd.value,
                 stream: _counter.onCounterUpd,
                 builder: (context, snapshot) {
                   return Text(
@@ -70,7 +68,6 @@ class MyHomeRxPage extends StatelessWidget {
 //            ),
             /// 6.
             StreamBuilder<int>(
-                initialData: _counter.onCounterUpd.value,
                 stream: _counter.onCounterUpd,
                 builder: (context, snapshot) {
                   return Text(
