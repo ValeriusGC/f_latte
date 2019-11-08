@@ -2,18 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// 2. Вынесем счетчик за пределы виджета.
-int _rxCounter = 10;
+class _Counter {
+  int count;
 
-/// 3. Создадим евент.
-final onCounterUpd = BehaviorSubject<int>();
+  _Counter(this.count) {
+    onCounterUpd.add(count);
+  }
 
-/// 4. Вынесем инкремент за пределы виджета, добавим генерацию события.
-Future incrementCounter() async {
-  onCounterUpd.add(++_rxCounter);
+  /// Создадим евент.
+  final onCounterUpd = BehaviorSubject<int>();
+
+  /// Вынесем инкремент за пределы виджета, добавим генерацию события.
+  Future incrementCounter() async {
+    onCounterUpd.add(++count);
+  }
+
 }
 
-/// 5.
+final _counter = _Counter(10);
+
+///
 class MyHomeRxPage extends StatelessWidget {
   final title;
 
@@ -22,8 +30,6 @@ class MyHomeRxPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// 5. Иначе  - null
-    onCounterUpd.add(_rxCounter);
 
     return Scaffold(
       appBar: AppBar(
@@ -52,8 +58,8 @@ class MyHomeRxPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             StreamBuilder<int>(
-                initialData: onCounterUpd.value,
-                stream: onCounterUpd,
+                initialData: _counter.onCounterUpd.value,
+                stream: _counter.onCounterUpd,
                 builder: (context, snapshot) {
                   return Text(
                     'You have pushed the button ${snapshot.data} times:',
@@ -64,8 +70,8 @@ class MyHomeRxPage extends StatelessWidget {
 //            ),
             /// 6.
             StreamBuilder<int>(
-                initialData: onCounterUpd.value,
-                stream: onCounterUpd,
+                initialData: _counter.onCounterUpd.value,
+                stream: _counter.onCounterUpd,
                 builder: (context, snapshot) {
                   return Text(
                     '${snapshot.data}',
@@ -76,7 +82,7 @@ class MyHomeRxPage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: incrementCounter,
+        onPressed: _counter.incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
