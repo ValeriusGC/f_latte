@@ -16,7 +16,8 @@ class CountersModel {
   CountersModel.start() : this._();
 
   Future addModel() async {
-    final item = CounterModel.start();
+    // вызов фабрики для экземпляра [CounterModel]
+    final item = sl<CounterModel>();
     item.onCounterUpd.listen((data){
       print('CountersModel.addModel: onCounterUpd.listen(($data)');
       _sum.update(items.fold(0, (a,b) => a + b.count));
