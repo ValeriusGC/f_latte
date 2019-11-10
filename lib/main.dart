@@ -1,8 +1,14 @@
+import 'package:f_latte/bizmodels/counters_bm.dart';
+import 'package:f_latte/core/sl.dart';
+import 'package:f_latte/rxdart_complex_page.dart';
 import 'package:f_latte/rxdart_page.dart';
 import 'package:f_latte/state_page.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  setupLocatorRxModel();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -23,8 +29,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       //home: MyHomePage(title: 'Flutter Demo Page with State'),
-      home: MyHomeRxPage(title: 'Flutter Demo Page with RxDart'),
+      home: MyComplexHomeRxPage(
+        title: 'Flutter Demo for Maria',
+        countersModel: sl<CountersModel>(),
+      ),
     );
   }
 }
-
