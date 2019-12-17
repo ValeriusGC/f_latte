@@ -1,26 +1,50 @@
+import 'package:f_latte/editor_files/event.dart';
+import 'package:f_latte/editor_files/list.dart';
 import 'package:f_latte/editor_files/note.dart';
-import 'package:f_latte/editor_files/note_mngr.dart';
+import 'package:f_latte/editor_list_progress_indicator.dart';
+import 'package:f_latte/editor_page_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class EditorPage extends StatefulWidget {
-  final Model model;
+  final EditorPageVm model;
   final String title;
+  final HeroId heroIds;
 
-  const EditorPage(this.model, {Key key, this.title}) : super(key: key);
+  const EditorPage(
+    this.model, {
+    Key key,
+    this.title,
+    @required this.heroIds,
+  }) : super(key: key);
 
   @override
   _EditorPageState createState() => _EditorPageState();
 }
 
-class _EditorPageState extends State<EditorPage> {
+class _EditorPageState
+    extends State<EditorPage> /*with SingleTickerProviderStateMixin*/ {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   final _titleFocus = FocusNode();
   final _contentFocus = FocusNode();
+
+//  AnimationController _controller;
+//  Animation<Offset> _animation;
   Event currEvent;
   EventType currEventType;
+
+  @override
+  void initState() {
+    super.initState();
+//    _controller = AnimationController(
+//      vsync: this,
+//      duration: Duration(milliseconds: 300),
+//    );
+//    _animation = Tween<Offset>(begin: Offset(0, 1.0), end: Offset(0.0, 0.0))
+//        .animate(_controller);
+  }
 
 //  _EditorPageState(){
 //    print('_EditorPageState._EditorPageState');
@@ -91,6 +115,7 @@ class _EditorPageState extends State<EditorPage> {
                     backgroundCursorColor: Colors.blue),
               ),
               Divider(
+                thickness: 2.0,
                 color: Colors.red[500],
               ),
               Expanded(
@@ -108,7 +133,8 @@ class _EditorPageState extends State<EditorPage> {
                           if (d.type == EventType.note) {
                             return PlainNoteWidget(d);
                           } else if (d.type == EventType.list) {
-                            return SomeListWidget(d);
+                            return SomeListWidget(
+                                widget.model, d, widget.heroIds);
                           } else {
                             return Center(
                               child: Text('???'),
@@ -186,51 +212,95 @@ class PlainNoteWidget extends StatelessWidget {
 }
 
 class SomeListWidget extends StatelessWidget {
+  final EditorPageVm _model;
   final SomeList _list;
+  final HeroId _hero;
 
-  const SomeListWidget(this._list, {Key key}) : super(key: key);
+  const SomeListWidget(this._model, this._list, this._hero, {Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final l2 = List.of(_list.items);
+    l2.sort((e1, e2) {
+      return e1.checked ? 1 : -1;
+    });
+
+    return Column(
+      children: <Widget>[
+        Hero(
+          tag: _hero.progressId,
+          child: StreamBuilder<int>(
+              stream: _model.onProgressUpd,
+              builder: (context, snapshot) {
+                final v = snapshot.data ?? 0.0;
+                return TaskProgressIndicator(
+                  color: Colors.redAccent,
+                  progress: v, // _model.getTaskCompletionPercent(_task),
+                );
+              }),
+        ),
+        Container(
 //      padding: EdgeInsets.all(5),
-      child: ListView.builder(
-        itemCount: _list.items.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            contentPadding: EdgeInsets.all(0.0),
-            title: Text('${_list.items[index].text}'),
-            leading: Checkbox(
-              value: false,
-              onChanged: (bool value) {},
-            ),
-          );
-        },
+          child: Expanded(
+            child: ListView.separated(
+              itemCount: l2.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  contentPadding: EdgeInsets.all(0.0),
+                  title: Text(
+                    '${l2[index].text}',
+                    style: TextStyle(
+                      decoration: l2[index].checked
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                    ),
+                  ),
+                  leading: Checkbox(
+                    value: l2[index].checked,
+                    onChanged: (bool value) {
+                      _model.switchElement(l2[index], value);
+                    },
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(Icons.menu),
+                    onPressed: () {},
+                  ),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return Divider(
+                  color: Colors.red,
+                );
+              },
 //            EntryItem(data[index]),
-      ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
 
 // Displays one Entry. If the entry has children then it's displayed
 // with an ExpansionTile.
-class EntryItem extends StatelessWidget {
-  const EntryItem(this.entry);
-
-  final Entry entry;
-
-  Widget _buildTiles(Entry root) {
-    if (root.children.isEmpty) return ListTile(title: Text(root.title));
-    return ExpansionTile(
-      key: PageStorageKey<Entry>(root),
-      title: Text(root.title),
-      children: root.children.map<Widget>(_buildTiles).toList(),
-      initiallyExpanded: true,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildTiles(entry);
-  }
-}
+//class EntryItem extends StatelessWidget {
+//  const EntryItem(this.entry);
+//
+//  final Entry entry;
+//
+//  Widget _buildTiles(Entry root) {
+//    if (root.children.isEmpty) return ListTile(title: Text(root.title));
+//    return ExpansionTile(
+//      key: PageStorageKey<Entry>(root),
+//      title: Text(root.title),
+//      children: root.children.map<Widget>(_buildTiles).toList(),
+//      initiallyExpanded: true,
+//    );
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return _buildTiles(entry);
+//  }
+//}
