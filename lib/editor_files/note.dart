@@ -9,7 +9,7 @@ class PlainNote extends Event {
   PlainNote(int uid, this.text) : super(uid, EventType.note);
 
   factory PlainNote.fromSomeList(SomeList list) {
-    return PlainNote(list.uid, list.items.map((e) => e.text).join('\n'));
+    return PlainNote(list.uid, list.items.map((e) => e.rawText).join('\n'));
   }
 
 }

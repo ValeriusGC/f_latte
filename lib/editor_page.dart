@@ -38,31 +38,7 @@ class _EditorPageState
   @override
   void initState() {
     super.initState();
-//    _controller = AnimationController(
-//      vsync: this,
-//      duration: Duration(milliseconds: 300),
-//    );
-//    _animation = Tween<Offset>(begin: Offset(0, 1.0), end: Offset(0.0, 0.0))
-//        .animate(_controller);
   }
-
-//  _EditorPageState(){
-//    print('_EditorPageState._EditorPageState');
-//  }
-//
-//
-//  @override
-//  void didChangeDependencies() {
-//    super.didChangeDependencies();
-//    print('_EditorPageState.didChangeDependencies');
-//  }
-//
-//  @override
-//  void initState() {
-//    super.initState();
-//    currEventType = widget.model.onTypeUpd.value;
-//    print('_EditorPageState.initState');
-//  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,10 +90,7 @@ class _EditorPageState
                     cursorColor: Colors.blue,
                     backgroundCursorColor: Colors.blue),
               ),
-              Divider(
-                thickness: 2.0,
-                color: Colors.red[500],
-              ),
+              Divider(thickness: 2.0, color: Colors.grey[500]),
               Expanded(
                 child: Container(
                   padding: EdgeInsets.all(5),
@@ -215,8 +188,10 @@ class SomeListWidget extends StatelessWidget {
   final EditorPageVm _model;
   final SomeList _list;
   final HeroId _hero;
+  final _contentController = TextEditingController();
+  final _contentFocus = FocusNode();
 
-  const SomeListWidget(this._model, this._list, this._hero, {Key key})
+  SomeListWidget(this._model, this._list, this._hero, {Key key})
       : super(key: key);
 
   @override
@@ -241,20 +216,25 @@ class SomeListWidget extends StatelessWidget {
               }),
         ),
         Container(
-//      padding: EdgeInsets.all(5),
           child: Expanded(
             child: ListView.separated(
               itemCount: l2.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   contentPadding: EdgeInsets.all(0.0),
-                  title: Text(
-                    '${l2[index].text}',
-                    style: TextStyle(
-                      decoration: l2[index].checked
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
+                  title: GestureDetector(
+                    child: Text(
+                      '${l2[index].rawText}',
+                      style: TextStyle(
+                        decoration: l2[index].checked
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                      ),
                     ),
+                    onLongPress: () {
+                      print('SomeListWidget.onLongPress');
+                      _model.startEditElement(l2[index]);
+                    },
                   ),
                   leading: Checkbox(
                     value: l2[index].checked,
@@ -277,30 +257,49 @@ class SomeListWidget extends StatelessWidget {
             ),
           ),
         ),
+        StreamBuilder<ListElement>(
+            stream: _model.onEditElementUpd,
+            builder: (context, snapshot) {
+              final d = snapshot.data;
+              print('SomeListWidget.snapshot.data = $d');
+              if (d == null) {
+                return Container();
+              } else {
+                _contentController.text = d.rawText;
+                return Column(
+                  children: <Widget>[
+                    Divider(thickness: 2.0, color: Colors.grey[500]),
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: EditableText(
+                              onChanged: (str) => {},
+                              maxLines: 1,
+                              // line limit extendable later
+                              controller: _contentController,
+                              focusNode: _contentFocus,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 20),
+                              backgroundCursorColor: Colors.red,
+                              cursorColor: Colors.blue,
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.cached),
+                            onPressed: () {
+                              _model.stopEditElement(d, _contentController.text);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(thickness: 2.0, color: Colors.grey[500]),
+                  ],
+                );
+              }
+            }),
       ],
     );
   }
 }
-
-// Displays one Entry. If the entry has children then it's displayed
-// with an ExpansionTile.
-//class EntryItem extends StatelessWidget {
-//  const EntryItem(this.entry);
-//
-//  final Entry entry;
-//
-//  Widget _buildTiles(Entry root) {
-//    if (root.children.isEmpty) return ListTile(title: Text(root.title));
-//    return ExpansionTile(
-//      key: PageStorageKey<Entry>(root),
-//      title: Text(root.title),
-//      children: root.children.map<Widget>(_buildTiles).toList(),
-//      initiallyExpanded: true,
-//    );
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return _buildTiles(entry);
-//  }
-//}

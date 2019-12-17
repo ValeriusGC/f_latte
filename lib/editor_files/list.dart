@@ -13,10 +13,19 @@ class SomeList extends Event {
   }
 
   void switchElement(ListElement element, bool check) {
-    final e = items.firstWhere((e) => e.text == element.text, orElse: () => null);
+    final e = items.firstWhere((e) => e.rawText == element.rawText, orElse: () => null);
     if(e != null) {
       final idx = items.indexOf(e);
-      final e2 = ListElement(e.text, !e.checked);
+      final e2 = ListElement(e.rawText, !e.checked);
+      items.replaceRange(idx, idx+1, [e2]);
+    }
+  }
+
+  void changeElement(ListElement element, String text) {
+    final e = items.firstWhere((e) => e.rawText == element.rawText, orElse: () => null);
+    if(e != null) {
+      final idx = items.indexOf(e);
+      final e2 = ListElement(text, e.checked);
       items.replaceRange(idx, idx+1, [e2]);
     }
   }
@@ -28,10 +37,11 @@ class SomeList extends Event {
 }
 
 class ListElement {
-  final String text;
+  final String rawText;
   final bool checked;
+  
 
-  ListElement(this.text, this.checked);
+  ListElement(this.rawText, this.checked);
 }
 
 

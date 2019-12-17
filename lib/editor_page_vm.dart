@@ -31,6 +31,7 @@ class EditorPageVm {
 
   final onProgressUpd = BehaviorSubject<int>();
 
+  final onEditElementUpd = BehaviorSubject<ListElement>();
 //  final _event = <Event>[null];
 
   final _eventBm = <EventBm>[null];
@@ -74,6 +75,18 @@ class EditorPageVm {
     }
   }
 
+  void startEditElement(ListElement element) {
+    if(_eventBm[0] is ListBm){
+      (_eventBm[0] as ListBm).startEditElement(element);
+    }
+  }
+
+  void stopEditElement(ListElement element, String newText) {
+    if(_eventBm[0] is ListBm){
+      (_eventBm[0] as ListBm).stopEditElement(element, newText);
+    }
+  }
+
   void changeType(EventType type) {
 
     _eventBm[0].onEventUpd.close();
@@ -90,10 +103,15 @@ class EditorPageVm {
         }
     }
 
+    // переобулись
     _eventBm[0].onEventUpd.listen((ev){
-      //onEventUpd.add(ev);
       _evChange(ev);
     });
+    if(_eventBm[0] is ListBm) {
+      (_eventBm[0] as ListBm).onEditElementUpd.listen((ev){
+        onEditElementUpd.add(ev);
+      });
+    }
 
   }
 
