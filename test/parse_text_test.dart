@@ -18,7 +18,6 @@ Parsed parse(String rawTxt) {
   }
   final lastColonIdx = rawTxt.lastIndexOf(':');
   if (lastColonIdx < 0) {
-    //if(lastColonIdx >= rawTxt.length-1){
     return Parsed(rawTxt, null, null);
   }
   //
