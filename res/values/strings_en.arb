@@ -1,12 +1,4 @@
 {
   "title": "F-Latte",
   "greeting": "Hi, $name!",
-  "pushingZero": "You not pressed",
-  "pushingOne": "You pressed once.",
-  "pushingTwo": "You pressed twice",
-  "pushingOther": "You pressed $cnt times",
-  "pushingFew": "You pressed few times",
-  "pushingMany": "You pressed many times",
-  "emptyField": "field below is empty",
-  "editHint": "Do typing and observe title",
 }
