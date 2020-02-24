@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:rxdart/rxdart.dart';
 
 void main() => runApp(MyApp());
 
@@ -35,7 +37,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +60,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
 /// Builds ModalBottomSheet for calcs
 void showCalcModalBottomSheet(BuildContext ctx) {
   showModalBottomSheet(
@@ -77,6 +77,20 @@ const bottomHeight = 0.5;
 
 ///
 class BottomSheet extends StatelessWidget {
+  final TextEditingController scanController = TextEditingController();
+  final FocusNode myFocusNode = FocusNode();
+
+  BottomSheet({Key key}) : super(key: key) {
+    scanController.addListener(() {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
+    });
+    scanController.text = onTextChange.value ?? 'Start';
+    scanController.selection = TextSelection(
+      baseOffset: 0,
+      extentOffset: scanController.text.length,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -89,11 +103,37 @@ class BottomSheet extends StatelessWidget {
           children: [
             Container(
               decoration: const BoxDecoration(
-                color: Colors.red,
+                color: Colors.white,
               ),
-              child: Text('A'),
+              child: StreamBuilder<String>(
+//                initialData: onTextChange.value,
+                stream: onTextChange,
+                builder: (context, snapshot) {
+                  final d = snapshot.data;
+                  if(d!=null){
+                    print('BottomSheet.build');
+                    scanController.text = d;
+                    scanController.selection = TextSelection
+                        .collapsed(offset: scanController.text.length);
+                  }
+                  return TextField(
+//                focusNode: myFocusNode,
+                    controller: scanController,
+                    autofocus: true,
+                    onTap: () {
+                      SystemChannels.textInput.invokeMethod('TextInput.hide');
+                    },
+                    onEditingComplete: () {
+                      SystemChannels.textInput.invokeMethod('TextInput.hide');
+                    },
+                    onChanged: (s) => onTextChange.add(s),
+                  );
+                }
+              ),
             )
           ]),
     );
   }
 }
+
+final onTextChange = BehaviorSubject.seeded('Text');
