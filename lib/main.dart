@@ -101,6 +101,8 @@ class BottomSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
+
             Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -137,3 +139,91 @@ class BottomSheet extends StatelessWidget {
 }
 
 final onTextChange = BehaviorSubject.seeded('Text');
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+typedef AnimWidgetBuilder = Widget Function(BuildContext ctx, dynamic anim);
+
+class AnimContainer extends StatefulWidget {
+  @override
+  _AnimContainerState createState() => _AnimContainerState();
+}
+
+class _AnimContainerState extends State<AnimContainer> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+
+
+  Widget buildButtons(context, anim) {
+    return Container(
+      height: 50,
+      width: anim["width"],
+      decoration: boxDecoration(ani["backgroundColor"]),
+      child: contentChildren[ani["childIndex"]](context, ani),
+    );
+  }
+
+
+  final contentChildren = <AnimWidgetBuilder>[
+    simpleButtons,
+    masterButtons,
+  ];
+
+  static final AnimWidgetBuilder simpleButtons = (ctx, anim) => Center(
+    child: Opacity(
+      opacity: anim["opacity"],
+      child: Row(
+        children: <Widget>[
+          RaisedButton(
+            child: Text('button1'),
+            onPressed: () {},
+          ),
+          RaisedButton(
+            child: Text('button2'),
+            onPressed: () {},
+          ),
+        ],
+      ),
+    ),
+  );
+
+  static final AnimWidgetBuilder masterButtons = (ctx, anim) => Center(
+    child: Opacity(
+      opacity: anim["opacity"],
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              RaisedButton(
+                child: Text('button1'),
+                onPressed: () {},
+              ),
+              RaisedButton(
+                child: Text('button2'),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              RaisedButton(
+                child: Text('button3'),
+                onPressed: () {},
+              ),
+              RaisedButton(
+                child: Text('button4'),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+
+
+}
+
