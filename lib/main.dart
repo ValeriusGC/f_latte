@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:simple_animations/simple_animations.dart';
+import 'package:simple_animations/simple_animations/controlled_animation.dart';
+import 'package:simple_animations/simple_animations/multi_track_tween.dart';
 
 void main() => runApp(MyApp());
 
@@ -96,44 +100,169 @@ class BottomSheet extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10),
       height: MediaQuery.of(context).size.height * bottomHeight,
-      color: Colors.green,
+//      color: Colors.green,
       child: Column(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              child: StreamBuilder<String>(
-//                initialData: onTextChange.value,
-                stream: onTextChange,
-                builder: (context, snapshot) {
-                  final d = snapshot.data;
-                  if(d!=null){
-                    print('BottomSheet.build');
-                    scanController.text = d;
-                    scanController.selection = TextSelection
-                        .collapsed(offset: scanController.text.length);
-                  }
-                  return TextField(
-//                focusNode: myFocusNode,
-                    controller: scanController,
-                    autofocus: true,
-                    onTap: () {
-                      SystemChannels.textInput.invokeMethod('TextInput.hide');
-                    },
-                    onEditingComplete: () {
-                      SystemChannels.textInput.invokeMethod('TextInput.hide');
-                    },
-                    onChanged: (s) => onTextChange.add(s),
-                  );
-                }
-              ),
-            )
+            AnimContainer(),
+//            Container(
+//              decoration: const BoxDecoration(
+//                color: Colors.white,
+//              ),
+//              child: StreamBuilder<String>(
+////                initialData: onTextChange.value,
+//                stream: onTextChange,
+//                builder: (context, snapshot) {
+//                  final d = snapshot.data;
+//                  if(d!=null){
+//                    print('BottomSheet.build');
+//                    scanController.text = d;
+//                    scanController.selection = TextSelection
+//                        .collapsed(offset: scanController.text.length);
+//                  }
+//                  return TextField(
+////                focusNode: myFocusNode,
+//                    controller: scanController,
+//                    autofocus: true,
+//                    onTap: () {
+//                      SystemChannels.textInput.invokeMethod('TextInput.hide');
+//                    },
+//                    onEditingComplete: () {
+//                      SystemChannels.textInput.invokeMethod('TextInput.hide');
+//                    },
+//                    onChanged: (s) => onTextChange.add(s),
+//                  );
+//                }
+//              ),
+//            )
           ]),
     );
   }
 }
 
 final onTextChange = BehaviorSubject.seeded('Text');
+
+////////////////////////////////////////////////////////////////////////////////
+
+final onGo = BehaviorSubject.seeded(false);
+
+typedef AnimWidgetBuilder = Widget Function(BuildContext ctx, dynamic anim);
+
+class Animator {
+  static const durationPart1 = const Duration(milliseconds: 100);
+  static const durationPart1a = const Duration(milliseconds: 50);
+  static const durationPart1b = const Duration(milliseconds: 50);
+
+  static const backgroundColor = 'backgroundColor';
+  static const childIndex = 'childIndex';
+
+  final tween = MultiTrackTween([
+    Track(backgroundColor)
+        .add(durationPart1, ColorTween(begin: Colors.green, end: Colors.white)),
+    Track(childIndex)
+        .add(durationPart1, ConstantTween(0))
+        .add(durationPart1, ConstantTween(1)),
+  ]);
+
+  static final Animator me = Animator();
+}
+
+class AnimContainer extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return GestureDetector(
+      onTap: () => onGo.add(!onGo.value),
+      child: StreamBuilder<bool>(
+        initialData: onGo.value,
+        stream: onGo,
+        builder: (context, snapshot) {
+          final v = snapshot.data ?? false;
+          return ControlledAnimation(
+            playback: v ? Playback.PLAY_FORWARD : Playback.PLAY_REVERSE,
+            tween: Animator.me.tween,
+            duration: Animator.me.tween.duration,
+            builder: (ctx, anim) {
+              return buildButtons(ctx, anim);
+            },
+          );
+        }
+      ),
+    );
+  }
+
+  Widget buildButtons(context, anim) {
+    return Container(
+      decoration: boxDecoration(anim[Animator.backgroundColor]),
+      child: contentChildren[anim[Animator.childIndex]](context, anim),
+    );
+  }
+
+  BoxDecoration boxDecoration(Color backgroundColor) {
+    return BoxDecoration(color: backgroundColor);
+  }
+
+  final contentChildren = <AnimWidgetBuilder>[
+    simpleButtons,
+    masterButtons,
+  ];
+
+  static final AnimWidgetBuilder simpleButtons = (ctx, anim) => Center(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              RaisedButton(
+                child: Text('button1'),
+                onPressed: () => onGo.add(!onGo.value),
+              ),
+              RaisedButton(
+                child: Text('button2'),
+                onPressed: () => onGo.add(!onGo.value),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  static final AnimWidgetBuilder masterButtons = (ctx, anim) => Center(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  RaisedButton(
+                    child: Text('button1'),
+                    onPressed: () => onGo.add(!onGo.value),
+                  ),
+                  RaisedButton(
+                    child: Text('button2'),
+                    onPressed: () => onGo.add(!onGo.value),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  RaisedButton(
+                    child: Text('button3'),
+                    onPressed: () => onGo.add(!onGo.value),
+                  ),
+                  RaisedButton(
+                    child: Text('button4'),
+                    onPressed: () => onGo.add(!onGo.value),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+}
