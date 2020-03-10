@@ -81,61 +81,16 @@ const bottomHeight = 0.5;
 
 ///
 class BottomSheet extends StatelessWidget {
-  final TextEditingController scanController = TextEditingController();
-  final FocusNode myFocusNode = FocusNode();
-
-  BottomSheet({Key key}) : super(key: key) {
-    scanController.addListener(() {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-    });
-    scanController.text = onTextChange.value ?? 'Start';
-    scanController.selection = TextSelection(
-      baseOffset: 0,
-      extentOffset: scanController.text.length,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10),
       height: MediaQuery.of(context).size.height * bottomHeight,
-//      color: Colors.green,
       child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             AnimContainer(),
-//            Container(
-//              decoration: const BoxDecoration(
-//                color: Colors.white,
-//              ),
-//              child: StreamBuilder<String>(
-////                initialData: onTextChange.value,
-//                stream: onTextChange,
-//                builder: (context, snapshot) {
-//                  final d = snapshot.data;
-//                  if(d!=null){
-//                    print('BottomSheet.build');
-//                    scanController.text = d;
-//                    scanController.selection = TextSelection
-//                        .collapsed(offset: scanController.text.length);
-//                  }
-//                  return TextField(
-////                focusNode: myFocusNode,
-//                    controller: scanController,
-//                    autofocus: true,
-//                    onTap: () {
-//                      SystemChannels.textInput.invokeMethod('TextInput.hide');
-//                    },
-//                    onEditingComplete: () {
-//                      SystemChannels.textInput.invokeMethod('TextInput.hide');
-//                    },
-//                    onChanged: (s) => onTextChange.add(s),
-//                  );
-//                }
-//              ),
-//            )
           ]),
     );
   }
