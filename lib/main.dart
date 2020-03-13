@@ -1,32 +1,13 @@
-import 'package:f_latte/service_locator.dart';
-import 'package:f_latte/text_manager.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:f_latte/generated/i18n.dart';
 import 'package:flutter/material.dart';
 
-import 'appbar.dart';
-
-
-void main() {
-  setUpServiceLocator();
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
-      localizationsDelegates: [
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        DefaultCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: S.delegate.supportedLocales,
+      title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -39,16 +20,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-
-  final _mgr = sl<TextManager>();
-
-  MyHomePage({Key key}) : super(key: key);
+  MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -58,6 +36,8 @@ class MyHomePage extends StatefulWidget {
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
+
+  final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -87,15 +67,15 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // localized title
-        //title: Text(S.of(context).title),
-        title: AppBarWidget(),
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-          // Column is also layout widget. It takes a list of children and
+          // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
           //
@@ -111,26 +91,12 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // localized widget
             Text(
-              S.of(context).greeting('User'),
+              'You have pushed the button this many times:',
             ),
-            // localized widget
             Text(
-              S.of(context).pushing(_counter),
+              '$_counter',
               style: Theme.of(context).textTheme.display1,
-            ),
-            Container(
-              padding: EdgeInsets.all(8.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: S.of(context).editHint,
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (v) {
-                  widget._mgr.txtCmd(v);
-                },
-              ),
             ),
           ],
         ),
