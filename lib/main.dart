@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 void main() => runApp(MyApp());
 
@@ -98,14 +99,42 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.display1,
             ),
+            Icon1(),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: ()=>onClick.add(onClick.value + 0.5),
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+final onClick = BehaviorSubject.seeded(1.0);
+
+class Icon1 extends StatelessWidget {
+
+  const Icon1();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<double>(
+      initialData: onClick.value,
+      stream: onClick,
+      builder: (context, snapshot) {
+        final k = snapshot.data ?? 1.0;
+        return Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Icon(Icons.cancel, size: 48 * k,),
+            Icon(Icons.close, color: Colors.red[200], size: 48 * k,),
+            Icon(Icons.crop, color: Colors.red, size: 88 * k),
+          ],
+        );
+      }
+    );
+  }
+
 }
