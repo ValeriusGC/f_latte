@@ -100,11 +100,15 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.display1,
             ),
             Icon1(),
+            Row(children: <Widget>[
+              RaisedButton(child: Text('UP'), onPressed: ()=>onClick.add(onClick.value + 0.5),),
+              RaisedButton(child: Text('DN'), onPressed: ()=>onClick.add(onClick.value - 0.5),),
+            ],),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: ()=>onClick.add(onClick.value + 0.5),
+        onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
